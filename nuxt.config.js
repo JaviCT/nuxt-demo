@@ -1,7 +1,19 @@
 import colors from 'vuetify/es5/util/colors'
+import bodyParser from 'body-parser'
+import session from 'express-session'
+require('dotenv').config()
 
 export default {
   mode: 'universal',
+  env: {
+    apiUrl: process.env.API_URL || 'http://localhost:3000'
+  },
+  /*
+  ** Router config
+  */
+  router: {
+    middleware: 'check-auth'
+  },
   /*
   ** Headers of the page
   */
@@ -41,7 +53,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/vuetify',
+    '@nuxtjs/vuetify'
   ],
   /*
   ** vuetify module configuration
@@ -63,9 +75,23 @@ export default {
   */
   build: {
     /*
-    ** You can extend webpack config here
+    ** Run ESLINT on save
     */
-    extend(config, ctx) {
+    extend (config, ctx) {
     }
-  }
+  },
+  serverMiddleware: [
+    // body-parser middleware
+    bodyParser.json(),
+    // session middleware
+    session({
+      secret: 'super-secret-key',
+      resave: false,
+      saveUninitialized: false,
+      cookie: { maxAge: 60000 }
+    }),
+    // Api middleware
+    // We add /api/login & /api/logout routes
+    '~/api'
+  ]
 }
