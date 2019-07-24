@@ -4,7 +4,7 @@ import session from 'express-session'
 require('dotenv').config()
 
 export default {
-  mode: 'universal',
+  mode: 'spa',
   env: {
     apiUrl: process.env.API_URL || 'http://localhost:3000'
   },
